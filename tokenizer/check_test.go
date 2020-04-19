@@ -11,3 +11,11 @@ func TestIsNumber(t *testing.T) {
 		t.Errorf("IsNumber() failed.")
 	}
 }
+
+func TestIsLetter(t *testing.T) {
+	letter := "a"
+
+	if !IsLetter(letter) {
+		t.Errorf("IsLetter() failed.")
+	}
+}

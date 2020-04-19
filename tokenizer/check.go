@@ -8,3 +8,10 @@ func IsNumber(character string) bool {
 
 	return numberRegex.Match([]byte(character))
 }
+
+// IsLetter checks if the given character is a letter and returns the condition
+func IsLetter(character string) bool {
+	letterRegex := regexp.MustCompile(`[a-zA-ZÖÄ_]`)
+
+	return letterRegex.Match([]byte(character))
+}
