@@ -13,9 +13,11 @@ func TestIsNumber(t *testing.T) {
 }
 
 func TestIsLetter(t *testing.T) {
-	letter := "a"
+	sentence := "INNERSKÄRFUNKÖNSKOGSFIBBLA"
 
-	if !IsLetter(letter) {
-		t.Errorf("IsLetter() failed.")
+	for _, letter := range sentence {
+		if !IsLetter(string(letter)) {
+			t.Errorf("IsLetter() failed, excepted %s to be a letter.", string(letter))
+		}
 	}
 }

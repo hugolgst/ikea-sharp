@@ -1,20 +1,13 @@
 package tokenizer
 
 import (
+	"fmt"
 	"testing"
 )
 
 func TestTokenize(t *testing.T) {
-	example := "hello (124)"
+	example := "INNERSKÄR FUNKÖN 213 ÄPPLARÖ FJÄLLBO"
 	tokens := Tokenize(example)
 
-	excepted := []string{
-		"NAME", "PARENTHESES", "NUMBER", "PARENTHESES",
-	}
-
-	for i, token := range tokens {
-		if token.Type != excepted[i] {
-			t.Errorf("Tokenize() failed, excepted %s got %s.", excepted[i], token.Type)
-		}
-	}
+	fmt.Println(tokens)
 }

@@ -1,5 +1,9 @@
 package tokenizer
 
+import (
+	"strings"
+)
+
 // A Token contains the type and the value of a part of code
 type Token struct {
 	Type  string
@@ -7,76 +11,94 @@ type Token struct {
 }
 
 const (
-	LeftParentheses  = "("
-	RightParentheses = ")"
+	LeftParentheses  = "FUNKÖN"
+	RightParentheses = "ÄPPLARÖ"
+	Quotes           = "SKOGSFIBBLA"
+	SemiColon        = "FJÄLLBO"
+)
 
-	Space = " "
+var (
+	i          int
+	character  string
+	characters []string
+	tokens     []Token
 )
 
 // Tokenize takes the given code, tokenize it and returns an array of Tokens
-func Tokenize(code string) (tokens []Token) {
-	var currentIndex int
+func Tokenize(code string) []Token {
+	code += " "
+	characters = strings.Split(code, "")
 
-	// Iterate each character of the code
-	for currentIndex < len(code) {
-		character := string(code[currentIndex])
+	for i = 0; i < len(characters); i++ {
+		character = characters[i]
 
-		// Add tokens for the left and right parentheses
-		if character == LeftParentheses || character == RightParentheses {
-			tokens = append(tokens, Token{
-				Type:  "PARENTHESES",
-				Value: character,
-			})
-
-			currentIndex++
-			continue
-		}
-
-		// Skip the spaces
-		if character == Space {
-			currentIndex++
-			continue
-		}
-
-		// If the character is a number, we iterate all the next characters to see if they are
-		// part of the number too.
-		if IsNumber(character) {
-			var value string
-
-			// Iterate through the next numbers
-			for IsNumber(character) {
-				value += character
-				currentIndex++
-				character = string(code[currentIndex])
-			}
-
-			// Then add the number token
-			tokens = append(tokens, Token{
-				Type: "NUMBER",
-				Value: value,
-			})
-		}
-
-		// If the character is a letter, we iterate all the next characters to see if they are
-		// part of the letter too.
+		// If the character is a letter, get all the next letters and create a token
 		if IsLetter(character) {
-			var value string
+			tokens = append(tokens, AppendStringValue())
+		}
 
-			// Iterate through the next letters
-			for IsLetter(character) {
-				value += character
-				currentIndex++
-				character = string(code[currentIndex])
-			}
-
-			// Then add the name token
-			tokens = append(tokens, Token{
-				Type: "NAME",
-				Value: value,
-			})
+		// If the character is a numbers, get all the next numbers and create a token
+		if IsNumber(character) {
+			tokens = append(tokens, AppendNumberValue())
 		}
 	}
 
-	return
+	return tokens
 }
 
+// AppendStringValue browses the next letters to add a token
+func AppendStringValue() Token {
+	var value string
+
+	// Iterate through all the next letters
+	for IsLetter(character) {
+		value += character
+		i++
+		character = characters[i]
+	}
+
+	// If the value is a parentheses append the parentheses token
+	if IsParentheses(value) {
+		return Token{
+			Type:  "PARENTHESES",
+			Value: value,
+		}
+	}
+
+	// If the value is a quote append the quote token
+	if value == Quotes {
+		return Token{
+			Type:  "QUOTES",
+			Value: value,
+		}
+	}
+
+	// If the value is a semicolon append the semicolon token
+	if value == SemiColon {
+		return Token{
+			Type:  "SEMICOLON",
+			Value: value,
+		}
+	}
+
+	return Token{
+		Type:  "NAME",
+		Value: value,
+	}
+}
+
+// AppendNumberValue browses the next numbers to add a token
+func AppendNumberValue() Token {
+	var value string
+
+	for IsNumber(character) {
+		value += character
+		i++
+		character = characters[i]
+	}
+
+	return Token{
+		Type:  "NUMBER",
+		Value: value,
+	}
+}
