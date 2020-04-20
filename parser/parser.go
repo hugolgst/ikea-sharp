@@ -11,30 +11,25 @@ var (
 
 // A Node is an element in the AST
 type Node struct {
-	Type       string
-	Value      string
-	Name       string
-	Callee     *Node
-	Expression *Node
-	Body       []Node
-	Params     []Node
-	Arguments  *[]Node
-	Context    *[]Node
+	Type   string
+	Value  string
+	Params []Node
 }
 
 // Parse takes the given tokens and creates an AST
-func Parse(_tokens []tokenizer.Token) Node {
+func Parse(_tokens []tokenizer.Token) []Node {
 	tokens = _tokens
 
-	// Create the default program node
-	program := Node{
-		Type: "Program",
-		Body: []Node{},
-	}
+	// Create the default program node array
+	var program []Node
 
 	// Iterate through the tokens
 	for currentIndex < len(tokens) {
-		program.Body = append(program.Body, Iterate())
+		node := Iterate()
+
+		if node.Type != "" {
+			program = append(program, node)
+		}
 	}
 
 	return program
@@ -55,32 +50,43 @@ func Iterate() Node {
 	}
 
 	// Iterate through the parameters inside the parentheses
-	if token.Type == "PARENTHESES" && token.Value == tokenizer.LeftParentheses {
-		// Skip the parenthese and get to the parameters
-		currentIndex++
-		token := tokens[currentIndex]
-
-		// Begin to crete the CallExpression node by adding the name
-		node := Node{
+	if token.Value == tokenizer.LeftParentheses {
+		call := Node{
 			Type:   "CallExpression",
-			Name:   token.Value,
+			Value:  tokens[currentIndex-1].Value,
 			Params: []Node{},
 		}
 
-		// Skip the name
-		currentIndex++
-		token = tokens[currentIndex]
-
-		// Add parameters until we get the right parentheses
-		for token.Type != "PARENTHESES" && token.Value != tokenizer.RightParentheses {
-			node.Params = append(node.Params, Iterate())
+		for tokens[currentIndex+1].Value != tokenizer.RightParentheses {
+			currentIndex++
 			token = tokens[currentIndex]
-		}
 
-		// Skip the last parentheses and returns the node
+			if tokens[currentIndex+1].Value == tokenizer.LeftParentheses {
+				currentIndex++
+
+				call.Params = append(call.Params, Iterate())
+				return call
+			}
+
+			call.Params = append(call.Params, Node{
+				Type: token.Type,
+				Value: token.Value,
+			})
+		}
 		currentIndex++
-		return node
+
+		return call
 	}
+
+	if token.Type == "SEMICOLON" {
+		currentIndex++
+		return Node{
+			Type: "SemiColon",
+			Value: token.Value,
+		}
+	}
+
+	currentIndex++
 
 	return Node{}
 }

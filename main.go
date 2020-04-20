@@ -1,8 +1,14 @@
 package main
 
-import "./tokenizer"
+import (
+	"./parser"
+	"./tokenizer"
+	"fmt"
+)
 
 func main() {
-	example := "TÄRNÖ BEHÅLLAREThis message will be printedBEHÅLLARE"
-	tokenizer.Tokenize(example)
+	example := "INNERSKÄR FUNKÖN INNERSKÄR FUNKÖN 124 ÄPPLARÖ ÄPPLARÖ FJÄLLBO"
+	tokens := tokenizer.Tokenize(example)
+	fmt.Println(tokens)
+	fmt.Println(parser.Parse(tokens))
 }
