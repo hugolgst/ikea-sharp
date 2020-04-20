@@ -15,6 +15,12 @@ const (
 	RightParentheses = "ÄPPLARÖ"
 	Quotes           = "SKOGSFIBBLA"
 	SemiColon        = "FJÄLLBO"
+
+	ParenthesesTag = "PARENTHESES"
+	QuotesTag      = "QUOTES"
+	SemiColonTag   = "SEMICOLON"
+	NameTag        = "NAME"
+	Number         = "NUMBER"
 )
 
 var (
@@ -60,7 +66,7 @@ func AppendStringValue() Token {
 	// If the value is a parentheses append the parentheses token
 	if IsParentheses(value) {
 		return Token{
-			Type:  "PARENTHESES",
+			Type:  ParenthesesTag,
 			Value: value,
 		}
 	}
@@ -68,7 +74,7 @@ func AppendStringValue() Token {
 	// If the value is a quote append the quote token
 	if value == Quotes {
 		return Token{
-			Type:  "QUOTES",
+			Type:  QuotesTag,
 			Value: value,
 		}
 	}
@@ -76,13 +82,13 @@ func AppendStringValue() Token {
 	// If the value is a semicolon append the semicolon token
 	if value == SemiColon {
 		return Token{
-			Type:  "SEMICOLON",
+			Type:  SemiColonTag,
 			Value: value,
 		}
 	}
 
 	return Token{
-		Type:  "NAME",
+		Type:  NameTag,
 		Value: value,
 	}
 }
@@ -98,7 +104,7 @@ func AppendNumberValue() Token {
 	}
 
 	return Token{
-		Type:  "NUMBER",
+		Type:  Number,
 		Value: value,
 	}
 }

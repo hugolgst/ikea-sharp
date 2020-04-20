@@ -5,6 +5,13 @@ import (
 	"strings"
 )
 
+const (
+	CallExpression = "CallExpression"
+	NumberLiteral  = "NumberLiteral"
+	SemiColon      = "SemiColon"
+	String         = "String"
+)
+
 var (
 	tokens       []tokenizer.Token
 	currentIndex int
@@ -45,7 +52,7 @@ func Iterate() Node {
 		currentIndex++
 
 		return Node{
-			Type:  "NumberLiteral",
+			Type:  NumberLiteral,
 			Value: token.Value,
 		}
 	}
@@ -53,7 +60,7 @@ func Iterate() Node {
 	// Iterate through the parameters inside the parentheses
 	if token.Value == tokenizer.LeftParentheses {
 		call := Node{
-			Type:   "CallExpression",
+			Type:   CallExpression,
 			Value:  tokens[currentIndex-1].Value,
 			Params: []Node{},
 		}
@@ -65,21 +72,7 @@ func Iterate() Node {
 
 			// Add elements between quotes as strings
 			if token.Value == tokenizer.Quotes {
-				currentIndex++
-				token = tokens[currentIndex]
-				var values []string
-
-				for token.Value != tokenizer.Quotes {
-					values = append(values, token.Value)
-					currentIndex++
-					token = tokens[currentIndex]
-				}
-
-				call.Params = append(call.Params, Node{
-					Type: "String",
-					Value: strings.Join(values, " "),
-				})
-
+				ParseStrings(&call)
 				continue
 			}
 
@@ -93,7 +86,7 @@ func Iterate() Node {
 
 			// Add the element to the params
 			call.Params = append(call.Params, Node{
-				Type: token.Type,
+				Type:  token.Type,
 				Value: token.Value,
 			})
 		}
@@ -102,10 +95,11 @@ func Iterate() Node {
 		return call
 	}
 
-	if token.Type == "SEMICOLON" {
+	// Add semicolons tokens
+	if token.Type == tokenizer.SemiColonTag {
 		currentIndex++
 		return Node{
-			Type: "SemiColon",
+			Type:  SemiColon,
 			Value: token.Value,
 		}
 	}
@@ -113,4 +107,23 @@ func Iterate() Node {
 	currentIndex++
 
 	return Node{}
+}
+
+// ParseStrings gets the tokens inside quotes and adds it to the call params
+func ParseStrings(call *Node) {
+	currentIndex++
+	token := tokens[currentIndex]
+	var values []string
+
+	// Wait for the other quote to come
+	for token.Value != tokenizer.Quotes {
+		values = append(values, token.Value)
+		currentIndex++
+		token = tokens[currentIndex]
+	}
+
+	call.Params = append(call.Params, Node{
+		Type:  String,
+		Value: strings.Join(values, " "),
+	})
 }
