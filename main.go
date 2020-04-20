@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	example := "INNERSKÄR FUNKÖN INNERSKÄR FUNKÖN 124 ÄPPLARÖ ÄPPLARÖ FJÄLLBO"
+	example := "INNERSKÄR FUNKÖN SKOGSFIBBLA Hello world! SKOGSFIBBLA ÄPPLARÖ FJÄLLBO"
 	tokens := tokenizer.Tokenize(example)
 	fmt.Println(tokens)
 	fmt.Println(parser.Parse(tokens))

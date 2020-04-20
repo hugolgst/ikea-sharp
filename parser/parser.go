@@ -2,6 +2,7 @@ package parser
 
 import (
 	"../tokenizer"
+	"strings"
 )
 
 var (
@@ -57,10 +58,32 @@ func Iterate() Node {
 			Params: []Node{},
 		}
 
+		// Iterate until we found the closing parentheses
 		for tokens[currentIndex+1].Value != tokenizer.RightParentheses {
 			currentIndex++
 			token = tokens[currentIndex]
 
+			// Add elements between quotes as strings
+			if token.Value == tokenizer.Quotes {
+				currentIndex++
+				token = tokens[currentIndex]
+				var values []string
+
+				for token.Value != tokenizer.Quotes {
+					values = append(values, token.Value)
+					currentIndex++
+					token = tokens[currentIndex]
+				}
+
+				call.Params = append(call.Params, Node{
+					Type: "String",
+					Value: strings.Join(values, " "),
+				})
+
+				continue
+			}
+
+			// If we found another parentheses, use recursion
 			if tokens[currentIndex+1].Value == tokenizer.LeftParentheses {
 				currentIndex++
 
@@ -68,6 +91,7 @@ func Iterate() Node {
 				return call
 			}
 
+			// Add the element to the params
 			call.Params = append(call.Params, Node{
 				Type: token.Type,
 				Value: token.Value,
