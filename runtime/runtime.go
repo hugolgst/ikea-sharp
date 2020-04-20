@@ -6,49 +6,26 @@ import (
 	"log"
 )
 
-var functions = map[string]func(...interface{}){
-	"SMÅGLI":      core.Println,
-	"FULLSPÄCKAD": core.Printf,
-	"TILLGÅNG":    core.Save,
-}
-
-var getters = map[string]func(...interface{}) string {
-	"SMÅKALLT": core.Get,
-}
-
+// Run takes a given AST and runs the found functions and getters
 func Run(ast []parser.Node) []parser.Node {
 	for i := 0; i < len(ast); i++ {
 		node := ast[i]
 
 		// Execute the found method
 		if node.Type == "CallExpression" {
-			// Move the params in an array of string
-			var params []interface{}
-			for _, param := range node.Params {
-				if param.Type == "CallExpression" {
-					for _, p := range Run([]parser.Node{param}) {
-						params = append(params, p.Value)
-					}
-
-					continue
-				}
-
-				params = append(params, param.Value)
-			}
+			params := GetParams(node)
 
 			// Search an existent function in the map
-			function := functions[node.Value]
-			getter := getters[node.Value]
+			function, getter := core.GetFunctions()[node.Value], core.GetGetters()[node.Value]
 			if function == nil && getter == nil {
 				log.Fatal("This function was not found.")
 			}
 
+			// Execute the found function
 			if function != nil {
-				// Execute the found function
 				function(params...)
-			}
-
-			if getter != nil {
+			// Execute the found getter and replace the content in the AST
+			} else if getter != nil {
 				ast[i] = parser.Node{
 					Type: "String",
 					Value: getter(params...),
@@ -60,4 +37,22 @@ func Run(ast []parser.Node) []parser.Node {
 	}
 
 	return ast
+}
+
+// GetParams retrieves the params from a given node and returns the params as an array of interface
+func GetParams(node parser.Node) (params []interface{}) {
+	for _, param := range node.Params {
+		// Execute recursion if we found another CallExpression
+		if param.Type == parser.CallExpression {
+			for _, p := range Run([]parser.Node{param}) {
+				params = append(params, p.Value)
+			}
+
+			continue
+		}
+
+		params = append(params, param.Value)
+	}
+
+	return
 }
