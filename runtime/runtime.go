@@ -2,8 +2,8 @@ package runtime
 
 import (
 	"../core"
+	"../log"
 	"../parser"
-	"log"
 )
 
 // Run takes a given AST and runs the found functions and getters
@@ -18,16 +18,16 @@ func Run(ast []parser.Node) []parser.Node {
 			// Search an existent function in the map
 			function, getter := core.GetFunctions()[node.Value], core.GetGetters()[node.Value]
 			if function == nil && getter == nil {
-				log.Fatal("This function was not found.")
+				log.Errorf("This reference was not found.")
 			}
 
 			// Execute the found function
 			if function != nil {
 				function(params...)
-			// Execute the found getter and replace the content in the AST
+				// Execute the found getter and replace the content in the AST
 			} else if getter != nil {
 				ast[i] = parser.Node{
-					Type: "String",
+					Type:  "String",
 					Value: getter(params...),
 				}
 			}
