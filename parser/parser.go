@@ -2,7 +2,6 @@ package parser
 
 import (
 	"../tokenizer"
-	"fmt"
 )
 
 var (
@@ -82,7 +81,6 @@ func Iterate() Node {
 		currentIndex++
 		return node
 	}
-
-	fmt.Println("bug")
+	
 	return Node{}
 }
