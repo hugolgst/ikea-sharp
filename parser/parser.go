@@ -28,7 +28,7 @@ func Parse(_tokens []tokenizer.Token) Node {
 
 	// Create the default program node
 	program := Node{
-		Type: "PROGRAM",
+		Type: "Program",
 		Body: []Node{},
 	}
 
@@ -81,6 +81,6 @@ func Iterate() Node {
 		currentIndex++
 		return node
 	}
-	
+
 	return Node{}
 }
