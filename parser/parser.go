@@ -81,14 +81,15 @@ func Iterate() Node {
 				currentIndex++
 
 				call.Params = append(call.Params, Iterate())
-				return call
+			}else{
+				call.Params = append(call.Params, Node{
+					Type:  token.Type,
+					Value: token.Value,
+				})
 			}
 
 			// Add the element to the params
-			call.Params = append(call.Params, Node{
-				Type:  token.Type,
-				Value: token.Value,
-			})
+
 		}
 		currentIndex++
 
