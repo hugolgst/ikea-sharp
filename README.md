@@ -51,7 +51,3 @@ Please see the examples [here](https://github.com/hugolgst/ikea-sharp/tree/maste
 * ÄNGSLILJA Int Int : Multiply
 * BLÖTSNÖ Int Int : Divide
 * SNÖYRA Int Int : Random number between min and max
-
-## License
-
-MIT
