@@ -16,7 +16,7 @@ func IsNumber(character string) bool {
 
 // IsLetter checks if the given character is a letter and returns the condition
 func IsLetter(character string) bool {
-	letterRegex := regexp.MustCompile(`[a-zA-Z]|[à-ú]|[À-Ú]|[!%]`)
+	letterRegex := regexp.MustCompile(`[a-zA-Z]|[à-ú]|[À-Ú]|[!%=]`)
 
 	return letterRegex.Match([]byte(character))
 }
