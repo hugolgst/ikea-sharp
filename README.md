@@ -27,6 +27,14 @@ Then follow the instructions
 
 ## Documentation
 
+Here is an example to get the user entry:
+```ikea
+SMÅGLI FUNKÖN SKOGSFIBBLA Hello! SKOGSFIBBLA ÄPPLARÖ FJÄLLBO
+SMÅGLI FUNKÖN SKOGSFIBBLA What is your name! SKOGSFIBBLA ÄPPLARÖ FJÄLLBO
+TOSTERÖ FUNKÖN SKOGSFIBBLA name SKOGSFIBBLA ÄPPLARÖ FJÄLLBO
+FULLSPÄCKAD FUNKÖN SKOGSFIBBLA Hello %s! SKOGSFIBBLA SMÅKALLT FUNKÖN name ÄPPLARÖ ÄPPLARÖ FJÄLLBO
+```
+
 Please see the examples [here](https://github.com/hugolgst/ikea-sharp/tree/master/examples)
 
 ### Methods
