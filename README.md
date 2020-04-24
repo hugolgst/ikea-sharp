@@ -22,7 +22,10 @@
 This language is pronounced "Ikea Sharp", and its **only** goal is to disrupt you.
 
 ## How To Use
-Download one of the latest builds from the release page, right [here](https://github.com/hugolgst/ikea-sharp/releases).
+Clone the project and run
+```go
+go run main.go examples/math.ikea
+```
 Then follow the instructions
 
 ## Documentation
